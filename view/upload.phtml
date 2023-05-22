@@ -1,0 +1,46 @@
+<?php
+echo "<h1>Upload Assessments File</h1>";
+
+echo '<form method="post" enctype="multipart/form-data">';
+echo 'Upload a file: <input type="file" id="new_file" name="new_file">';
+echo '<br>';
+echo '<input type="submit" name="uploadBtn" value="upload">';
+echo "</form>";
+echo "<p>CSV file must be in the following format - id,course_name,assessment_name,date,time,status [Completed/Current]</p>";
+echo "<hr>";
+
+echo "<h2>Files Previously Uploaded (Now in data Folder)</h2>";
+
+$doc_list = get_doc_list();
+
+
+echo "<ul>";
+for ($i=0;$i<count($doc_list);$i++){
+
+        echo '<li><a href="?option=upload&changedefault='.$doc_list[$i].'">'.$doc_list[$i].'</a></li><br>';
+}
+echo "</ul>";
+
+echo "<hr>";
+echo "<p>Footer</p>";
+
+if(isset($_POST['uploadBtn'])){
+    echo $_FILES['new_file']['name'];
+    $tmp_name = $_FILES['new_file']['tmp_name'];
+    $name = $_FILES['new_file']['name'];
+    $dir = DATA_PATH.$name;
+    if(move_uploaded_file($tmp_name,$dir)){
+        echo "<p>Successfully</p>";
+    }else{
+        echo "<p>Not Successful</p>";
+        echo $_FILES['new_file']['error'];
+    }
+}
+
+// For changing default_file.txt setting
+$doc_text =htmlspecialchars($_GET['changedefault']);
+if (!empty($doc_text)){
+    file_put_contents(LIST_SRC,$doc_text);
+}
+
+

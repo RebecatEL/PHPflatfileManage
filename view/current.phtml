@@ -1,0 +1,34 @@
+<?php
+echo "<h1>List of Current Assessments</h1>";
+
+echo "<form method='post'>";
+$list_txt = '';
+global $lists;
+foreach ($lists as $list) {
+    $info = explode(",",$list);
+    if(trim($info[5])=="Current"){
+        $list_txt .= $info[0]." ".$info[1]." ".$info[2]." ".$info[3]." ".$info[4];
+        $list_txt .= '<input type="checkbox" id="'.$info[0].'" name="checklist[]" value="'.$info[0].'"></input>';
+        $list_txt .= "</br>";
+    }
+
+}
+
+if(!$list_txt) echo "There is no record";
+
+echo  $list_txt;
+echo "</br>";
+echo '<input type="submit" value="Update">';
+echo "</form>";
+
+echo "<hr>";
+echo "<p>Footer</p>";
+
+if (isset($_POST)){
+    if(!empty($_POST['checklist'])){
+        foreach ($_POST['checklist'] as $check){ // $check = value of checkbox
+            save_data($check);
+        }
+        header("refresh: 0");
+    }
+}
